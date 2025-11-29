@@ -3,9 +3,9 @@
 
 // Backend API base URL
 // In development, use proxy (/api) to avoid CORS issues
-// In production, use full URL
+// In production, use Vercel API proxy to avoid Mixed Content issues
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 
-  (import.meta.env.DEV ? '/api/v1' : 'http://139.59.137.138/api/v1')
+  (import.meta.env.DEV ? '/api/v1' : '/api/v1')
 
 export const API_ENDPOINTS = {
   // Auth
