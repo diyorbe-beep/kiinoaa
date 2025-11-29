@@ -1,6 +1,6 @@
 // Vercel serverless function to proxy API requests
 // This avoids Mixed Content issues (HTTPS -> HTTP)
-// Maps to /api/v1/... path using rewrites
+// Maps to /api/v1/... path
 
 export default async function handler(req, res) {
   // Handle OPTIONS request for CORS preflight
@@ -11,19 +11,27 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  // Get path from req.url (Vercel provides full URL in req.url)
-  // req.url will be like: /api/v1/movies?ordering=-created_at&limit=20
-  const url = new URL(req.url, `https://${req.headers.host || 'example.com'}`);
-  const pathname = url.pathname;
+  // Get path from query params (Vercel catch-all routes use 'slug' in query)
+  // For /api/v1/movies/, req.query.slug will be ['movies']
+  // For /api/v1/movies/123/, req.query.slug will be ['movies', '123']
+  const slugParam = req.query.slug;
+  let apiPath = '';
   
-  // Remove /api/v1 prefix to get the actual API path
-  const apiPath = pathname.replace(/^\/api\/v1\/?/, '');
+  if (slugParam) {
+    if (Array.isArray(slugParam)) {
+      apiPath = slugParam.join('/');
+    } else {
+      apiPath = slugParam;
+    }
+  }
   
   // Backend API URL
   const backendUrl = `http://139.59.137.138/api/v1/${apiPath}`;
   
-  // Get query string from URL
-  const queryString = url.searchParams.toString();
+  // Get query string from request (excluding 'slug' parameter)
+  const queryParams = { ...req.query };
+  delete queryParams.slug;
+  const queryString = new URLSearchParams(queryParams).toString();
   const fullUrl = queryString ? `${backendUrl}?${queryString}` : backendUrl;
   
   // Get request method and headers
