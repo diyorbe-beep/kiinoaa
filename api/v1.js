@@ -1,6 +1,5 @@
 // Vercel serverless function to proxy API requests
 // This avoids Mixed Content issues (HTTPS -> HTTP)
-// Maps to /api/v1/... path
 
 export default async function handler(req, res) {
   // Handle OPTIONS request for CORS preflight
@@ -11,40 +10,30 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  // Vercel provides the full URL in req.url
-  // Parse the URL to extract path and query
-  let url;
-  try {
-    // req.url might be relative or absolute
-    if (req.url.startsWith('http')) {
-      url = new URL(req.url);
-    } else {
-      // Construct full URL from headers
-      const protocol = req.headers['x-forwarded-proto'] || 'https';
-      const host = req.headers.host || req.headers['x-forwarded-host'];
-      url = new URL(req.url, `${protocol}://${host}`);
-    }
-  } catch (e) {
-    // Fallback: parse manually
-    const [pathname, search] = req.url.split('?');
-    url = { pathname, searchParams: new URLSearchParams(search || '') };
-  }
+  // Parse the request URL
+  // With rewrite, req.url will be like: /api/v1?path=movies&ordering=-created_at&limit=20
+  // Or without rewrite: /api/v1/movies?ordering=-created_at&limit=20
+  const urlString = req.url || '';
   
-  // Extract path after /api/v1
-  const pathname = typeof url.pathname === 'string' ? url.pathname : url.pathname?.toString() || req.url.split('?')[0];
-  const apiPath = pathname.replace(/^\/api\/v1\/?/, '');
+  let apiPath = '';
+  let queryString = '';
+  
+  // Check if path is in query params (from rewrite)
+  if (req.query && req.query.path) {
+    apiPath = Array.isArray(req.query.path) ? req.query.path.join('/') : req.query.path;
+    // Get other query params
+    const otherParams = { ...req.query };
+    delete otherParams.path;
+    queryString = new URLSearchParams(otherParams).toString();
+  } else {
+    // Parse from URL directly
+    const [pathPart, queryPart] = urlString.split('?');
+    apiPath = pathPart.replace(/^\/api\/v1\/?/, '');
+    queryString = queryPart || '';
+  }
   
   // Backend API URL
   const backendUrl = `http://139.59.137.138/api/v1/${apiPath}`;
-  
-  // Get query string
-  let queryString = '';
-  if (url.searchParams && typeof url.searchParams.toString === 'function') {
-    queryString = url.searchParams.toString();
-  } else if (req.url.includes('?')) {
-    queryString = req.url.split('?')[1];
-  }
-  
   const fullUrl = queryString ? `${backendUrl}?${queryString}` : backendUrl;
   
   // Get request method and headers
@@ -113,10 +102,11 @@ export default async function handler(req, res) {
     }
   } catch (error) {
     console.error('Proxy error:', error);
+    console.error('Request URL:', req.url);
+    console.error('Full URL:', fullUrl);
     res.status(500).json({ 
       error: 'Proxy request failed', 
       message: error.message 
     });
   }
 }
-
