@@ -1,0 +1,279 @@
+{
+  "project_name": "movie-series-community",
+  "stack": "React+Vite+Tailwind",
+  "screens": [
+    {
+      "name": "Home",
+      "frame_id": "0-1",
+      "description": "Main landing page with featured movies/series, categories, and community highlights"
+    },
+    {
+      "name": "Movie Details",
+      "frame_id": "0-2",
+      "description": "Individual movie page with details, cast, ratings, reviews, and community discussions"
+    },
+    {
+      "name": "Series Details",
+      "frame_id": "0-3",
+      "description": "Individual series page with seasons, episodes, cast, ratings, and community discussions"
+    },
+    {
+      "name": "Community",
+      "frame_id": "0-4",
+      "description": "Community hub with discussions, user posts, trending topics, and activity feed"
+    },
+    {
+      "name": "User Profile",
+      "frame_id": "0-5",
+      "description": "User profile page with watchlist, reviews, activity, and settings"
+    },
+    {
+      "name": "Search Results",
+      "frame_id": "0-6",
+      "description": "Search results page with filters and categorized results"
+    }
+  ],
+  "components": [
+    {
+      "name": "Header",
+      "frame_id": "1-1",
+      "description": "Main navigation header with logo, menu, search, and user actions"
+    },
+    {
+      "name": "Footer",
+      "frame_id": "1-2",
+      "description": "Site footer with links, social media, and copyright"
+    },
+    {
+      "name": "MovieCard",
+      "frame_id": "1-3",
+      "description": "Card component displaying movie poster, title, rating, and quick actions"
+    },
+    {
+      "name": "SeriesCard",
+      "frame_id": "1-4",
+      "description": "Card component displaying series poster, title, seasons, rating, and quick actions"
+    },
+    {
+      "name": "UserAvatar",
+      "frame_id": "1-5",
+      "description": "User avatar component with dropdown menu"
+    },
+    {
+      "name": "CommentSection",
+      "frame_id": "1-6",
+      "description": "Comment thread component with replies, likes, and user interactions"
+    },
+    {
+      "name": "RatingStars",
+      "frame_id": "1-7",
+      "description": "Star rating component (display and interactive)"
+    },
+    {
+      "name": "NavigationMenu",
+      "frame_id": "1-8",
+      "description": "Main navigation menu component"
+    },
+    {
+      "name": "SearchBar",
+      "frame_id": "1-9",
+      "description": "Search input with autocomplete and filters"
+    },
+    {
+      "name": "Button",
+      "frame_id": "1-10",
+      "description": "Reusable button component with variants (primary, secondary, outline, ghost)"
+    },
+    {
+      "name": "HeroSection",
+      "frame_id": "1-11",
+      "description": "Hero banner with featured content and CTA"
+    },
+    {
+      "name": "CategoryFilter",
+      "frame_id": "1-12",
+      "description": "Category filter chips/buttons for content filtering"
+    },
+    {
+      "name": "Modal",
+      "frame_id": "1-13",
+      "description": "Reusable modal component for overlays"
+    },
+    {
+      "name": "Carousel",
+      "frame_id": "1-14",
+      "description": "Content carousel/slider component"
+    }
+  ],
+  "tokens": {
+    "colors": {
+      "primary": {
+        "50": "#F7FAFC",
+        "100": "#EDF2F7",
+        "200": "#E2E8F0",
+        "300": "#CBD5E0",
+        "400": "#A0AEC0",
+        "500": "#718096",
+        "600": "#4A5568",
+        "700": "#2D3748",
+        "800": "#1A202C",
+        "900": "#171923"
+      },
+      "accent": {
+        "primary": "#3182CE",
+        "secondary": "#805AD5",
+        "success": "#38A169",
+        "warning": "#D69E2E",
+        "error": "#E53E3E"
+      },
+      "background": {
+        "default": "#FFFFFF",
+        "secondary": "#F7FAFC",
+        "dark": "#1A202C"
+      },
+      "text": {
+        "primary": "#1A202C",
+        "secondary": "#4A5568",
+        "tertiary": "#718096",
+        "inverse": "#FFFFFF"
+      },
+      "border": {
+        "default": "#E2E8F0",
+        "hover": "#CBD5E0"
+      }
+    },
+    "typography": {
+      "fontFamily": {
+        "primary": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+        "heading": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+      },
+      "fontSize": {
+        "xs": "12px",
+        "sm": "14px",
+        "base": "16px",
+        "lg": "18px",
+        "xl": "20px",
+        "2xl": "24px",
+        "3xl": "30px",
+        "4xl": "36px",
+        "5xl": "48px"
+      },
+      "fontWeight": {
+        "light": "300",
+        "normal": "400",
+        "medium": "500",
+        "semibold": "600",
+        "bold": "700"
+      },
+      "lineHeight": {
+        "tight": "1.25",
+        "normal": "1.5",
+        "relaxed": "1.75"
+      },
+      "headings": {
+        "h1": {
+          "fontSize": "48px",
+          "fontWeight": "700",
+          "lineHeight": "1.2"
+        },
+        "h2": {
+          "fontSize": "36px",
+          "fontWeight": "600",
+          "lineHeight": "1.3"
+        },
+        "h3": {
+          "fontSize": "30px",
+          "fontWeight": "600",
+          "lineHeight": "1.4"
+        },
+        "h4": {
+          "fontSize": "24px",
+          "fontWeight": "600",
+          "lineHeight": "1.4"
+        },
+        "h5": {
+          "fontSize": "20px",
+          "fontWeight": "500",
+          "lineHeight": "1.5"
+        },
+        "h6": {
+          "fontSize": "18px",
+          "fontWeight": "500",
+          "lineHeight": "1.5"
+        }
+      },
+      "body": {
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "lineHeight": "1.5"
+      },
+      "caption": {
+        "fontSize": "12px",
+        "fontWeight": "400",
+        "lineHeight": "1.5"
+      }
+    },
+    "spacing": {
+      "0": "0px",
+      "1": "4px",
+      "2": "8px",
+      "3": "12px",
+      "4": "16px",
+      "5": "20px",
+      "6": "24px",
+      "8": "32px",
+      "10": "40px",
+      "12": "48px",
+      "16": "64px",
+      "20": "80px",
+      "24": "96px"
+    },
+    "borderRadius": {
+      "none": "0px",
+      "sm": "4px",
+      "md": "8px",
+      "lg": "12px",
+      "xl": "16px",
+      "2xl": "24px",
+      "full": "9999px"
+    },
+    "shadows": {
+      "sm": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+      "md": "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+      "lg": "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+      "xl": "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+      "2xl": "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
+    },
+    "zIndex": {
+      "base": "0",
+      "dropdown": "1000",
+      "sticky": "1020",
+      "fixed": "1030",
+      "modalBackdrop": "1040",
+      "modal": "1050",
+      "popover": "1060",
+      "tooltip": "1070"
+    },
+    "breakpoints": {
+      "mobile": "425px",
+      "tablet": "768px",
+      "desktop": "1024px",
+      "wide": "1280px"
+    }
+  },
+  "notes": [
+    "NOTE: Design tokens are based on common patterns. Please verify against actual Figma design and update colors, spacing, and typography values to match exactly.",
+    "All icons should be exported as SVGs from Figma and placed in /src/assets/icons",
+    "Images should be exported at 1x and 2x resolutions (2x for retina displays)",
+    "Use semantic HTML elements (header, nav, main, section, footer, article, aside)",
+    "Implement proper ARIA labels for accessibility",
+    "All interactive elements must have focus states",
+    "Forms should include client-side validation",
+    "Responsive breakpoints: Mobile (≤425px), Tablet (768px), Desktop (1024px+)",
+    "Use Tailwind utility classes; extend config for custom values",
+    "Components should be small and single-responsibility",
+    "Export instructions: Export frames as PNG/JPG at 1x and 2x, icons as SVG",
+    "If custom fonts are used in Figma, add @import in index.css or use closest system font fallback"
+  ]
+}
+
