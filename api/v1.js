@@ -11,27 +11,40 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  // Get path from query params (Vercel catch-all routes use 'slug' in query)
-  // For /api/v1/movies/, req.query.slug will be ['movies']
-  // For /api/v1/movies/123/, req.query.slug will be ['movies', '123']
-  const slugParam = req.query.slug;
-  let apiPath = '';
-  
-  if (slugParam) {
-    if (Array.isArray(slugParam)) {
-      apiPath = slugParam.join('/');
+  // Vercel provides the full URL in req.url
+  // Parse the URL to extract path and query
+  let url;
+  try {
+    // req.url might be relative or absolute
+    if (req.url.startsWith('http')) {
+      url = new URL(req.url);
     } else {
-      apiPath = slugParam;
+      // Construct full URL from headers
+      const protocol = req.headers['x-forwarded-proto'] || 'https';
+      const host = req.headers.host || req.headers['x-forwarded-host'];
+      url = new URL(req.url, `${protocol}://${host}`);
     }
+  } catch (e) {
+    // Fallback: parse manually
+    const [pathname, search] = req.url.split('?');
+    url = { pathname, searchParams: new URLSearchParams(search || '') };
   }
+  
+  // Extract path after /api/v1
+  const pathname = typeof url.pathname === 'string' ? url.pathname : url.pathname?.toString() || req.url.split('?')[0];
+  const apiPath = pathname.replace(/^\/api\/v1\/?/, '');
   
   // Backend API URL
   const backendUrl = `http://139.59.137.138/api/v1/${apiPath}`;
   
-  // Get query string from request (excluding 'slug' parameter)
-  const queryParams = { ...req.query };
-  delete queryParams.slug;
-  const queryString = new URLSearchParams(queryParams).toString();
+  // Get query string
+  let queryString = '';
+  if (url.searchParams && typeof url.searchParams.toString === 'function') {
+    queryString = url.searchParams.toString();
+  } else if (req.url.includes('?')) {
+    queryString = req.url.split('?')[1];
+  }
+  
   const fullUrl = queryString ? `${backendUrl}?${queryString}` : backendUrl;
   
   // Get request method and headers
