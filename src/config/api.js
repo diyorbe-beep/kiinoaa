@@ -2,15 +2,13 @@
 // API configuration and base URL
 
 // Backend API base URL
-// Development: Use Vite proxy (/api) - configured in vite.config.js
+// Development: Use Vite proxy (/api/v1) - configured in vite.config.js
 // Production: Use Vercel proxy (/api/v1) - configured in vercel.json and api/v1.js
 // 
 // Priority:
-// 1. VITE_API_BASE_URL from .env file
-// 2. Development: /api (Vite proxy)
-// 3. Production: /api/v1 (Vercel proxy)
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 
-  (import.meta.env.DEV ? '/api/v1' : '/api/v1')
+// 1. VITE_API_BASE_URL from .env file (if set)
+// 2. Default: /api/v1 (works for both dev and production via proxy)
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/v1'
 
 export const API_ENDPOINTS = {
   // Auth

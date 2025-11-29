@@ -36,20 +36,26 @@ export default async function handler(req, res) {
   
   // Backend API URL - Production server
   const BACKEND_BASE_URL = 'http://139.59.137.138/api/v1';
-  const backendUrl = `${BACKEND_BASE_URL}/${apiPath}`.replace(/\/+/g, '/').replace(':/', '://');
+  
+  // Build backend URL correctly
+  let backendUrl;
+  if (apiPath) {
+    backendUrl = `${BACKEND_BASE_URL}/${apiPath}`.replace(/\/+/g, '/').replace(':/', '://');
+  } else {
+    backendUrl = BACKEND_BASE_URL;
+  }
+  
   const fullUrl = queryString ? `${backendUrl}?${queryString}` : backendUrl;
   
-  // Debug logging
-  if (process.env.VERCEL_ENV === 'development' || process.env.NODE_ENV === 'development') {
-    console.log('Vercel Proxy Request:', {
-      originalUrl: req.url,
-      query: req.query,
-      apiPath,
-      backendUrl,
-      fullUrl,
-      method: req.method
-    });
-  }
+  // Debug logging (always log for debugging)
+  console.log('🔵 Vercel Proxy Request:', {
+    originalUrl: req.url,
+    query: req.query,
+    apiPath: apiPath || '(empty)',
+    backendUrl,
+    fullUrl,
+    method: req.method
+  });
   
   // Get request method and headers
   const method = req.method;
