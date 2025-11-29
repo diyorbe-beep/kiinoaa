@@ -10,31 +10,46 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  // Parse URL - Vercel rewrite sends path as query param
-  // With rewrite: /api/v1?path=movies&ordering=-created_at&limit=20
-  // Without rewrite: /api/v1/movies?ordering=-created_at&limit=20
+  // Parse URL from req.url
+  // Vercel rewrite sends: /api/v1?path=movies&ordering=-created_at&limit=20
+  // Or direct: /api/v1/movies?ordering=-created_at&limit=20
   let apiPath = '';
   let queryString = '';
   
-  // Check if path is in query params (from rewrite)
+  // Method 1: Check if path is in query params (from Vercel rewrite)
   if (req.query && req.query.path) {
-    // Path from rewrite
+    // Path from rewrite: req.query.path = 'movies' or ['movies', '123']
     apiPath = Array.isArray(req.query.path) ? req.query.path.join('/') : req.query.path;
-    // Get other query params
+    // Get other query params (ordering, limit, etc.)
     const otherParams = { ...req.query };
     delete otherParams.path;
     queryString = new URLSearchParams(otherParams).toString();
-  } else {
-    // Parse from URL directly (if rewrite doesn't work)
+  } 
+  // Method 2: Parse from URL directly (fallback if rewrite doesn't work)
+  else {
     const urlString = req.url || '';
     const [pathPart, queryPart] = urlString.split('?');
-    apiPath = pathPart.replace(/^\/api\/v1\/?/, '');
+    // Remove /api/v1 prefix
+    apiPath = pathPart.replace(/^\/api\/v1\/?/, '').replace(/^\/?/, '');
     queryString = queryPart || '';
   }
   
-  // Backend API URL
-  const backendUrl = `http://139.59.137.138/api/v1/${apiPath}`;
+  // Backend API URL - Production server
+  const BACKEND_BASE_URL = 'http://139.59.137.138/api/v1';
+  const backendUrl = `${BACKEND_BASE_URL}/${apiPath}`.replace(/\/+/g, '/').replace(':/', '://');
   const fullUrl = queryString ? `${backendUrl}?${queryString}` : backendUrl;
+  
+  // Debug logging
+  if (process.env.VERCEL_ENV === 'development' || process.env.NODE_ENV === 'development') {
+    console.log('Vercel Proxy Request:', {
+      originalUrl: req.url,
+      query: req.query,
+      apiPath,
+      backendUrl,
+      fullUrl,
+      method: req.method
+    });
+  }
   
   // Get request method and headers
   const method = req.method;

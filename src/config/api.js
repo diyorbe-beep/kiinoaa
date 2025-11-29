@@ -2,8 +2,13 @@
 // API configuration and base URL
 
 // Backend API base URL
-// In development, use proxy (/api) to avoid CORS issues
-// In production, use Vercel API proxy to avoid Mixed Content issues
+// Development: Use Vite proxy (/api) - configured in vite.config.js
+// Production: Use Vercel proxy (/api/v1) - configured in vercel.json and api/v1.js
+// 
+// Priority:
+// 1. VITE_API_BASE_URL from .env file
+// 2. Development: /api (Vite proxy)
+// 3. Production: /api/v1 (Vercel proxy)
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 
   (import.meta.env.DEV ? '/api/v1' : '/api/v1')
 
