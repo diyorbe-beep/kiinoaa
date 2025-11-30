@@ -64,3 +64,5 @@ CORS_ALLOW_CREDENTIALS = True
 # Preflight cache duration (in seconds)
 CORS_PREFLIGHT_MAX_AGE = 86400  # 24 hours
 
+
+

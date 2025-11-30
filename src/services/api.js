@@ -39,11 +39,25 @@ class ApiService {
   }
 
   // Build full URL
+  // Handles cases:
+  // - baseURL = '/api/v1', endpoint = '/movies/' → '/api/v1/movies/'
+  // - baseURL = '/api/v1', endpoint = 'movies/' → '/api/v1/movies/'
+  // - baseURL = 'http://...', endpoint = '/movies/' → 'http://.../movies/'
   buildURL(endpoint) {
-    if (endpoint.startsWith('http')) {
+    // If endpoint is already a full URL, return it
+    if (endpoint.startsWith('http://') || endpoint.startsWith('https://')) {
       return endpoint
     }
-    return `${this.baseURL}${endpoint}`
+    
+    // Ensure baseURL doesn't end with slash (except root)
+    const base = this.baseURL.endsWith('/') && this.baseURL !== '/' 
+      ? this.baseURL.slice(0, -1) 
+      : this.baseURL
+    
+    // Ensure endpoint starts with slash
+    const path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`
+    
+    return `${base}${path}`
   }
 
   // Build headers
@@ -188,6 +202,15 @@ class ApiService {
     const url = this.buildURL(endpoint)
     const headers = this.buildHeaders(options.headers)
 
+    // Debug logging in development
+    if (import.meta.env.DEV) {
+      console.log('🔵 API GET Request:', {
+        endpoint,
+        url,
+        baseURL: this.baseURL,
+      })
+    }
+
     try {
       const response = await fetch(url, {
         method: 'GET',
@@ -197,7 +220,11 @@ class ApiService {
 
       return await this.handleResponse(response)
     } catch (error) {
-      console.error('GET request failed:', error)
+      console.error('GET request failed:', {
+        endpoint,
+        url,
+        error: error.message,
+      })
       throw error
     }
   }

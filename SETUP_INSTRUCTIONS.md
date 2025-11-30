@@ -186,3 +186,5 @@ Barcha frontend kodlari tayyor va ishlaydi. Faqat Django backend'ga CORS qo'shis
 
 **Savollar bo'lsa:** `DEPLOYMENT_GUIDE.md` va `API_USAGE_EXAMPLES.md` fayllarini ko'ring.
 
+
+
