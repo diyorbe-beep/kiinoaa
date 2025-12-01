@@ -188,3 +188,4 @@ Barcha frontend kodlari tayyor va ishlaydi. Faqat Django backend'ga CORS qo'shis
 
 
 
+

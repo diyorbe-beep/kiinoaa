@@ -1,5 +1,6 @@
 // Vercel serverless function to proxy API requests
-// This avoids Mixed Content issues (HTTPS -> HTTP)
+// Catch-all route: /api/v1/* → this function
+// This avoids Mixed Content issues (HTTPS → HTTP)
 
 export default async function handler(req, res) {
   // Handle OPTIONS request for CORS preflight
@@ -10,26 +11,26 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  // Parse URL from req.url
-  // Vercel rewrite sends: /api/v1?path=movies&ordering=-created_at&limit=20
-  // Or direct: /api/v1/movies?ordering=-created_at&limit=20
+  // Get path from req.query.path (Vercel catch-all route)
+  // For /api/v1/movies/ → req.query.path = ['movies']
+  // For /api/v1/movies/123/ → req.query.path = ['movies', '123']
   let apiPath = '';
   let queryString = '';
   
-  // Method 1: Check if path is in query params (from Vercel rewrite)
   if (req.query && req.query.path) {
-    // Path from rewrite: req.query.path = 'movies' or ['movies', '123']
-    apiPath = Array.isArray(req.query.path) ? req.query.path.join('/') : req.query.path;
+    // Path is an array from catch-all route
+    apiPath = Array.isArray(req.query.path) 
+      ? req.query.path.join('/') 
+      : req.query.path;
+    
     // Get other query params (ordering, limit, etc.)
     const otherParams = { ...req.query };
     delete otherParams.path;
     queryString = new URLSearchParams(otherParams).toString();
-  } 
-  // Method 2: Parse from URL directly (fallback if rewrite doesn't work)
-  else {
+  } else {
+    // Fallback: parse from URL
     const urlString = req.url || '';
     const [pathPart, queryPart] = urlString.split('?');
-    // Remove /api/v1 prefix
     apiPath = pathPart.replace(/^\/api\/v1\/?/, '').replace(/^\/?/, '');
     queryString = queryPart || '';
   }
@@ -51,6 +52,7 @@ export default async function handler(req, res) {
   console.log('🔵 Vercel Proxy Request:', {
     originalUrl: req.url,
     query: req.query,
+    path: req.query?.path,
     apiPath: apiPath || '(empty)',
     backendUrl,
     fullUrl,
@@ -122,10 +124,16 @@ export default async function handler(req, res) {
       res.send(data);
     }
   } catch (error) {
-    console.error('Proxy error:', error);
+    console.error('❌ Proxy error:', error);
     res.status(500).json({ 
       error: 'Proxy request failed', 
-      message: error.message 
+      message: error.message,
+      details: {
+        backendUrl: fullUrl,
+        apiPath,
+        query: req.query
+      }
     });
   }
 }
+

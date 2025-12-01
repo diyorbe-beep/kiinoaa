@@ -251,3 +251,4 @@ Agar barcha checklist bajarilgan bo'lsa, 404 xatosi bo'lmasligi kerak!
 3. Vercel Function logs'ni tekshiring
 4. Django backend loglarini tekshiring
 
+

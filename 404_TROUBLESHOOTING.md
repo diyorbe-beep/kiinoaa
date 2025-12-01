@@ -289,3 +289,4 @@ Agar muammo hal bo'lmasa:
 3. Vercel Function logs'ni yuboring
 4. Django backend loglarini yuboring
 
+
