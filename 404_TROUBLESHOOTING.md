@@ -290,3 +290,4 @@ Agar muammo hal bo'lmasa:
 4. Django backend loglarini yuboring
 
 
+

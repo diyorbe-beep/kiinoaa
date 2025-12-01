@@ -115,3 +115,4 @@ https://juathd.vercel.app/api/v1//movies/
 **Endi faqat tekshirish qoldi!**
 
 
+

@@ -252,3 +252,4 @@ Agar barcha checklist bajarilgan bo'lsa, 404 xatosi bo'lmasligi kerak!
 4. Django backend loglarini tekshiring
 
 
+
